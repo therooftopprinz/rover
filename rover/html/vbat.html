@@ -1,0 +1,24 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <img id="s1" src="vbat_24h.svg"/>
+        <img id="s2" src="vbat_1h.svg"/>
+        <img id="s3" src="vbat_5m.svg"/>
+        <script>
+            var s1 = document.getElementById("s1");
+            var s2 = document.getElementById("s2");
+            var s3 = document.getElementById("s3");
+
+            window.setInterval(
+                function()
+                {
+                    s1.src = "vbat_24h.svg?" + new Date().getTime();
+                    s2.src = "vbat_1h.svg?" + new Date().getTime();
+                    s3.src = "vbat_5m.svg?" + new Date().getTime();
+                }
+                , 2000);
+        </script>
+    </body>
+</html>

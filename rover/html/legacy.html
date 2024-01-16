@@ -1,0 +1,337 @@
+<html>
+    <head>
+        <script src="joystick.js" type="text/javascript"></script>
+        <style>
+            .container {  display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 5fr 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 30px 5fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "cam cam"
+                "soc_temp soc_temp_txt"
+                "soc_fan soc_fan_txt"
+                "mot_temp mot_temp_txt"
+                "pwm_left pwm_right"
+                "pwm_left_txt pwm_right_txt"
+                "led_ scale_"
+                "led_ctl scale_ctl"
+                "connect_ctl connect_ctl"
+                "vbat_txt vbat"
+                "status_2 status_2"
+                "joyl joyr";
+            }
+
+            .cam { grid-area: cam; background-color: green;}
+
+            .joyl { grid-area: joyl; background-color: cyan;}
+
+            .joyr { grid-area: joyr; background-color: yellow;}
+
+            .soc_temp { grid-area: soc_temp; }
+
+            .soc_fan { grid-area: soc_fan; }
+
+            .mot_temp { grid-area: mot_temp; }
+
+            .pwm_left { grid-area: pwm_left; }
+
+            .led_ctl { grid-area: led_ctl; }
+
+            .pwm_left_txt { grid-area: pwm_left_txt; }
+
+            .soc_temp_txt { grid-area: soc_temp_txt; }
+
+            .soc_fan_txt { grid-area: soc_fan_txt; }
+
+            .mot_temp_txt { grid-area: mot_temp_txt; }
+
+            .pwm_right { grid-area: pwm_right; }
+
+            .pwm_right_txt { grid-area: pwm_right_txt; }
+
+            .scale_ctl { grid-area: scale_ctl; }
+
+            .led_ {  display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "led led_txt";
+            grid-area: led_;
+            }
+
+            .led { grid-area: led; }
+
+            .led_txt { grid-area: led_txt; }
+
+            .scale_ {  display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "scale scale_txt";
+            grid-area: scale_;
+            }
+
+            .scale { grid-area: scale; }
+
+            .scale_txt { grid-area: scale_txt; }
+
+            .connect_ctl { grid-area: connect_ctl; }
+
+            .vbat_txt { grid-area: vbat_txt; }
+            .vbat { grid-area: vbat; }
+
+            .status_2 { grid-area: status_2; }
+
+
+            .js {
+                background-color: red;
+                height: 200px;
+                width: 200px;
+                margin: auto
+            }
+
+        </style>
+        <meta name="viewport" 
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="cam">
+                <img id="imgcam" style="height:250px; width:100%;"/>
+            </div>
+            <div class="joyl"><div id="joyl" class="js"></div></div>
+            <div class="joyr"><div id="joyr" class="js"></div></div>
+            <div id="soc_temp"       class="soc_temp">soc_temp</div>
+            <div id="soc_fan"        class="soc_fan">soc_fan</div>
+            <div id="mot_temp"       class="mot_temp">mot_temp</div>
+            <div id="pwm_left"       class="pwm_left">pwm_left</div>
+            <div id="led_ctl"        class="led_ctl">
+                <input type="button" style="display: inline; width: 20%;" value="-" id="led_m10"/>
+                <input type="button" style="display: inline; width: 20%;" value="-" id="led_m5"/>
+                <input type="button" style="display: inline; width: 20%;" value="+" id="led_p5"/>
+                <input type="button" style="display: inline; width: 20%;" value="+" id="led_p10"/>
+            </div>
+            <div id="pwm_left_txt"   class="pwm_left_txt">pwm_left_txt</div>
+            <div id="soc_temp_txt"   class="soc_temp_txt">soc_temp_txt</div>
+            <div id="soc_fan_txt"    class="soc_fan_txt">soc_fan_txt</div>
+            <div id="mot_temp_txt"   class="mot_temp_txt">mot_temp_txt</div>
+            <div id="pwm_right"      class="pwm_right">pwm_right</div>
+            <div id="pwm_right_txt"  class="pwm_right_txt">pwm_right_txt</div>
+            <div id="scale_ctl"      class="scale_ctl">
+                <input type="button" style="display: inline; width: 20%;" value="-" id="pwm_scale_m10"/>
+                <input type="button" style="display: inline; width: 20%;" value="-" id="pwm_scale_m5"/>
+                <input type="button" style="display: inline; width: 20%;" value="+" id="pwm_scale_p5"/>
+                <input type="button" style="display: inline; width: 20%;" value="+" id="pwm_scale_p10"/>
+            </div>
+            <div class="led_">
+              <div id="led"     class="led">led</div>
+              <div id="led_txt" class="led_txt">led_txt</div>
+            </div>
+            <div class="scale_">
+              <div id="scale"     class="scale">scale</div>
+              <div id="scale_txt" class="scale_txt">scale_txt</div>
+            </div>
+            <div class="connect_ctl">
+                <input id="host" type="text" value="host:port" style="display:inline; width:60%"><input type="button" value="connect" id="connect">
+            </div>
+            <div id="vbat_txt" class="vbat_txt">vbat</div>
+            <div id="vbat" class="vbat"></div>
+            <div id="status_2" class="status_2">status_2</div>
+        </div>
+
+        <script type="text/javascript">
+            jsy_left = 0;
+            jsy_right = 0;
+            pwm_scale = 1.0;
+            led_pwm = 100.0;
+            
+            function vbat_level(x, val=0)
+            {
+                var A =  4.2;
+                var B = -0.000006229315652543309;
+                var C = -3.9291748597031520e-9;
+                var D =  3.6641697991120297e-13;
+                var E = -1.6185292056651710e-17;
+                var F =  3.4216749096102910e-22;
+                var G = -3.0527877774226680e-27;
+                return A + B*x + C*x**2 + D*x**3 + E*x**4 + F*x**5 + G*x**6 - val;
+            }
+
+            var vbat_3v = 34512.82015915984;
+            function vbat_level_d(x)
+            {
+                var B = -0.000006229315652543309;
+                var C = -3.9291748597031520e-9;
+                var D =  3.6641697991120297e-13;
+                var E = -1.6185292056651710e-17;
+                var F =  3.4216749096102910e-22;
+                var G = -3.0527877774226680e-27;
+                return B + 2*C*x + 3*D*x**2 + 4*E*x**3 + 5*F*x**4 + 6*G*x**5;
+            }
+
+            function s_from_vbat(val)
+            {
+                console.log("level_from_vbat: ", val);
+                x_i = 0;
+                var counter = 0;
+                while (true)
+                {
+                    var x_i_old = x_i;
+                    var d = vbat_level_d(x_i);
+
+                    if (d == 0)
+                    {
+                        console.log("platue!");
+                        return undefined;
+                    }
+
+                    var level = vbat_level(x_i, val);
+                    x_i = x_i - level/d;
+
+                    // console.log("iter ", counter, x_i_old, level, d);
+                    var err = 0.0001;
+                    if (level < err && level > -err)
+                    {
+                        return x_i;
+                    }
+
+                    counter++;
+                    if (counter > 50)
+                    {
+                        console.log("diverged!");
+                        return undefined;
+                    }
+                }
+            }
+
+            function connect()
+            {
+                ws = new WebSocket(document.getElementById("host").value);
+                    ws.onmessage = function(event)
+                    {
+                        var cmd = event.data.split(' ');
+                        if (cmd[0] == "stats")
+                        {
+                            document.getElementById("soc_temp_txt").innerText = cmd[1];
+                            document.getElementById("soc_fan_txt").innerText = cmd[2];
+                            document.getElementById("led_txt").innerText = cmd[3];
+                            document.getElementById("mot_temp_txt").innerText = cmd[4];
+                            document.getElementById("pwm_left_txt").innerText = cmd[5]
+                            document.getElementById("pwm_right_txt").innerText = cmd[6];
+                            var vbat = Math.round(parseFloat(cmd[7])*100)/100;
+                            var vcel = Math.round(vbat*100/4)/100;
+                            var vlev = s_from_vbat(vcel);
+                            var vslop = Math.round(parseFloat(cmd[8])*10)/10;
+                            if (vlev === undefined)
+                            {
+                                vlev = 0;
+                            }
+                            vlev = Math.round(100*(1-(vlev/vbat_3v)));
+                            document.getElementById("vbat").innerText = vbat + "v (" + vcel + "v)\n[" + vlev + "%, " + vslop + " mv/s]";
+
+                            document.getElementById("scale_txt").innerText = Math.round(pwm_scale*100)/100;
+                        }
+                    };
+            }
+
+            document.getElementById("imgcam").src = "http://"+location.hostname + ":8080/stream";
+            document.getElementById("host").value = "ws://" + location.hostname + ":9002"
+            document.getElementById("connect").addEventListener("click", 
+                function()
+                {
+                    connect();
+                }, false);
+
+            document.getElementById("led_m10").addEventListener("click",
+                function(){
+                    led_pwm -= 10;
+                    if (0 >= led_pwm) led_pwm = 0;
+                    ws.send("led " + led_pwm);
+                }, false);
+            document.getElementById("led_m5").addEventListener("click",
+                function(){
+                    led_pwm -= 1;
+                    if (0 >= led_pwm) led_pwm = 0;
+                    ws.send("led " + led_pwm);
+                }, false);
+            document.getElementById("led_p5").addEventListener("click",
+                function(){
+                    led_pwm += 1;
+                    if (led_pwm >= 100) led_pwm = 100;
+                    ws.send("led " + led_pwm);
+                }, false);
+            document.getElementById("led_p10").addEventListener("click",
+                function(){
+                    led_pwm += 10;
+                    if (led_pwm >= 100) led_pwm = 100;
+                    ws.send("led " + led_pwm);
+                }, false);
+            document.getElementById("pwm_scale_m10").addEventListener("click",
+                function(){
+                    pwm_scale += (-0.10);
+                    if (0 >= pwm_scale) pwm_scale = 0;
+                }, false);
+            document.getElementById("pwm_scale_m5").addEventListener("click",
+                function(){
+                    pwm_scale += (-0.05);
+                    if (0 >= pwm_scale) pwm_scale = 0;
+                }, false);
+            document.getElementById("pwm_scale_p5").addEventListener("click",
+                function(){
+                    pwm_scale += (+0.05);
+                    if (pwm_scale >= 1.0) pwm_scale = 1.0;
+                }, false);
+            document.getElementById("pwm_scale_p10").addEventListener("click",
+                function(){
+                    pwm_scale += (+0.10);
+                    if (pwm_scale >= 1.0) pwm_scale = 1.0;
+                }, false);
+
+            // document.getElementById("limit_pwm_txt").innerText = "pwm_scale (" + pwm_scale + ")";
+
+            var joyl = new JoyStick('joyl', {},
+            function(stickData)
+                {
+                    // joy1IinputPosX.value = stickData.xPosition;
+                    // joy1InputPosY.value = stickData.yPosition;
+                    // joy1Direzione.value = stickData.cardinalDirection;
+                    console.log(stickData);
+                    console.log(joyl.GetY());
+                    jsy_left =  Math.round(pwm_scale*stickData.y);
+                    console.log(jsy_left);
+                });
+
+            var joyr = new JoyStick('joyr', {},
+                function(stickData)
+                {
+                    // joy1IinputPosX.value = stickData.xPosition;
+                    // joy1InputPosY.value = stickData.yPosition;
+                    // joy1Direzione.value = stickData.cardinalDirection;
+                    jsy_right =  Math.round(pwm_scale*stickData.y);
+                });
+
+            odd_even = 0;
+            window.setInterval(
+                function(event)
+                {
+                    ws.send("stats");
+                }, 250);
+
+            window.setInterval(
+                function(event)
+                {
+                    ws.send("js " + jsy_left + " " + jsy_right);
+                    odd_even = (odd_even + 1 )%2;
+                    document.getElementById("status_2").innerText = "js"+ odd_even + " " + jsy_left + " " + jsy_right;
+                }, 50);
+
+            connect();
+        </script>
+
+    </body>
+</html>

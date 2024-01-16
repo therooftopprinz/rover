@@ -1,0 +1,607 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="joystick.js"></script>
+    <script type="text/javascript" src="jmuxer.js"></script>
+
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 255px 340px 200px;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "cam cam"
+                "panels panels"
+                "control joystick";
+        }
+
+        .cam {
+            grid-area: cam;
+        }
+
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "vbat_graph vbat_graph vbat_graph vbat_panel"
+                "vbat_graph vbat_graph vbat_graph vbat_panel"
+                "misc misc misc misc"
+                "misc misc misc misc";
+            grid-area: panels;
+        }
+
+        .vbat_graph {
+            grid-area: vbat_graph;
+        }
+
+        .vbat_panel {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            grid-auto-columns: 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "vbat"
+                "vcell"
+                "vpercent"
+                "vslope"
+                "vgraph_ui";
+            grid-area: vbat_panel;
+        }
+
+        .vbat {
+            grid-area: vbat;
+        }
+
+        .vcell {
+            grid-area: vcell;
+        }
+
+        .vpercent {
+            grid-area: vpercent;
+        }
+
+        .vslope {
+            grid-area: vslope;
+        }
+
+        .vgraph_ui {
+            grid-area: vgraph_ui;
+        }
+
+        .misc {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "soct_temp_txt  soc_temp  wifi_quality_txt  wifi_quality"
+                "soc_fan_txt    soc_fan   wifi_signal_txt   wifi_signal"
+                "led_txt        led       slave_accept_txt  slave_accept"
+                "led_ui         led_ui    log               log"
+                "latency_txt latency log log";
+            grid-area: misc;
+        }
+
+        .led_txt {
+            grid-area: led_txt;
+        }
+
+        .led {
+            grid-area: led;
+        }
+
+        .led_ui {
+            grid-area: led_ui;
+        }
+
+        .latency_txt {
+            grid-area: latency_txt;
+        }
+
+        .latency {
+            grid-area: latency;
+        }
+
+        .soct_temp_txt {
+            grid-area: soct_temp_txt;
+        }
+
+        .soc_temp {
+            grid-area: soc_temp;
+        }
+
+        .soc_fan_txt {
+            grid-area: soc_fan_txt;
+        }
+
+        .soc_fan {
+            grid-area: soc_fan;
+        }
+
+        .wifi_quality_txt {
+            grid-area: wifi_quality_txt;
+        }
+
+        .wifi_quality {
+            grid-area: wifi_quality;
+        }
+
+        .wifi_quality_ui {
+            grid-area: wifi_quality_ui;
+        }
+
+        .log {
+            grid-area: log;
+        }
+
+        .slave_accept {
+            grid-area: slave_accept;
+        }
+
+
+        .slave_accept_txt {
+            grid-area: slave_accept_txt;
+        }
+
+        .joystick {
+            grid-area: joystick;
+        }
+
+        .control {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            gap: 0px 0px;
+            grid-auto-flow: row;
+            grid-template-areas:
+                "pwm_right_txt pwm_right"
+                "pwm_left_txt pwm_left"
+                "motor_temp_txt motor_temp"
+                "scale_txt scale"
+                "scale_ui scale_ui";
+            grid-area: control;
+        }
+
+        .pwm_right_txt {
+            grid-area: pwm_right_txt;
+        }
+
+        .pwm_left_txt {
+            grid-area: pwm_left_txt;
+        }
+
+        .pwm_left {
+            grid-area: pwm_left;
+        }
+
+        .pwm_right {
+            grid-area: pwm_right;
+        }
+
+        .motor_temp_txt {
+            grid-area: motor_temp_txt;
+        }
+
+        .motor_temp {
+            grid-area: motor_temp;
+        }
+
+        .scale_txt {
+            grid-area: scale_txt;
+        }
+
+        .scale {
+            grid-area: scale;
+        }
+
+        .scale_ui {
+            grid-area: scale_ui;
+        }
+
+        .cam {
+            padding: 0px !important;
+            background-color: green;
+        }
+
+        #js {
+            height: 180px;
+            width: 180px;
+            margin: auto
+                /* background-color: red; */
+        }
+
+        .log {
+            padding: 5px;
+            background-color: violet;
+        }
+
+        .vbat_graph {
+            margin: 5px
+        }
+
+        .vbat_panel {
+            margin: 5px
+        }
+
+        .misc {
+            margin: 5px
+        }
+
+        .display_group {
+            margin: 2px;
+            padding: 8px;
+            border: 1px solid #7f7f7f;
+            font-family: Verdana, sans-serif;
+        }
+
+        body {
+            margin: 2px;
+        }
+
+        #vbat_graph {
+            height: 150px
+        }
+
+        #imgcam {
+            height: 250px;
+            width: 100%;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                    user-select: none; /* Non-prefixed version, currently
+                                        supported by Chrome and Opera */
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+</head>
+
+<body>
+    <div class="container noselect">
+        <div class="cam display_group">
+            <img id="imgcam" style"transform: rotate(180deg")></video>
+            <!-- <video style="border: 1px solid #333; max-width: 500px;" controls autoplay id="player"></video> -->
+        </div>
+        <div class="panels">
+            <div class="vbat_graph display_group">
+                <img id="vbat_graph">
+            </div>
+            <div class="vbat_panel display_group">
+                <div class="vbat" id="vbat">vbat</div>
+                <div class="vcell" id="vcell">vcell</div>
+                <div class="vpercent" id="vpercent">vpercent</div>
+                <div class="vslope" id="vslope">slope</div>
+                <div class="vgraph_ui">
+                    <input type="button" id="vbatg_p" value="<" />
+                    <input type="button" id="vbatg_n" value=">" />
+                    <span id="vbatg_ind"></span>
+                </div>
+            </div>
+            <div class="misc display_group">
+                <div class="led_txt">led</div>
+                <div class="led" id="led">NULL</div>
+                <div class="led_ui">
+                    <input type="button" style="display: inline; width: 20%;" value="-" id="led_m10" />
+                    <input type="button" style="display: inline; width: 20%;" value="-" id="led_m5" />
+                    <input type="button" style="display: inline; width: 20%;" value="+" id="led_p5" />
+                    <input type="button" style="display: inline; width: 20%;" value="+" id="led_p10" />
+                </div>
+                <div class="latency_txt">latency</div>
+                <div class="latency" id="latency">NULL</div>
+                <div class="soct_temp_txt">soc_temp</div>
+                <div class="soc_temp" id="soc_temp">NULL</div>
+                <div class="soc_fan_txt">soc_fan</div>
+                <div class="soc_fan" id="soc_fan">NULL</div>
+                <div class="wifi_quality_txt">wifi_quality</div>
+                <div class="wifi_quality" id="wifi_quality">NULL</div>
+                <div class="wifi_signal_txt">wifi_signal</div>
+                <div class="wifi_signal" id="wifi_signal">NULL</div>
+                <div class="slave_accept_txt">slave_acpt</div>
+                <div class="slave_accept" id="slave_accept">NULL</div>
+                <div class="log" id="log"></div>
+            </div>
+        </div>
+        <div class="joystick display_group">
+            <div id="js"></div>
+        </div>
+        <div class="control display_group">
+            <div class="pwm_right_txt">pwm_right</div>
+            <div class="pwm_left_txt">pwm_left</div>
+            <div class="pwm_left" id="pwm_left">NULL</div>
+            <div class="pwm_right" id="pwm_right">NULL</div>
+            <div class="motor_temp_txt">mot_temp</div>
+            <div class="motor_temp" id="motor_temp">NULL</div>
+            <div class="scale_txt">pwm_scale</div>
+            <div class="scale" id="scale">NULL</div>
+            <div class="scale_ui">
+                <input type="button" style="display: inline; width: 20%;" value="-" id="pwm_scale_m10" />
+                <input type="button" style="display: inline; width: 20%;" value="-" id="pwm_scale_m5" />
+                <input type="button" style="display: inline; width: 20%;" value="+" id="pwm_scale_p5" />
+                <input type="button" style="display: inline; width: 20%;" value="+" id="pwm_scale_p10" />
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        js_x = 0;
+        js_y = 0;
+        js_left = 0;
+        js_right = 0;
+        pwm_scale = 1.0;
+        led_pwm = 100.0;
+
+        var latency_start = performance.now();
+        latency = 0;
+
+        function vbat_level(x, val = 0) {
+            var A = 4.2;
+            var B = -0.000006229315652543309;
+            var C = -3.9291748597031520e-9;
+            var D = 3.6641697991120297e-13;
+            var E = -1.6185292056651710e-17;
+            var F = 3.4216749096102910e-22;
+            var G = -3.0527877774226680e-27;
+            return A + B * x + C * x ** 2 + D * x ** 3 + E * x ** 4 + F * x ** 5 + G * x ** 6 - val;
+        }
+
+        var vbat_3v = 34512.82015915984;
+        function vbat_level_d(x) {
+            var B = -0.000006229315652543309;
+            var C = -3.9291748597031520e-9;
+            var D = 3.6641697991120297e-13;
+            var E = -1.6185292056651710e-17;
+            var F = 3.4216749096102910e-22;
+            var G = -3.0527877774226680e-27;
+            return B + 2 * C * x + 3 * D * x ** 2 + 4 * E * x ** 3 + 5 * F * x ** 4 + 6 * G * x ** 5;
+        }
+
+        function s_from_vbat(val) {
+            // console.log(" vbat: ", val);
+            x_i = 0;
+            var counter = 0;
+            while (true) {
+                var x_i_old = x_i;
+                var d = vbat_level_d(x_i);
+
+                if (d == 0) {
+                    console.log("platue!");
+                    return undefined;
+                }
+
+                var level = vbat_level(x_i, val);
+                x_i = x_i - level / d;
+
+                // console.log("iter ", counter, x_i_old, level, d);
+                var err = 0.0001;
+                if (level < err && level > -err) {
+                    return x_i;
+                }
+
+                counter++;
+                if (counter > 50) {
+                    console.log("diverged!");
+                    return undefined;
+                }
+            }
+        }
+
+        function connect() {
+            ws = new WebSocket("ws://" + location.hostname + ":9002");
+            ws.onmessage = function (event) {
+                var latency_end = performance.now();
+                var cmd = event.data.split(' ');
+                if (cmd[0] == "stats") {
+                    document.getElementById("soc_temp").innerText = Math.round(parseFloat(cmd[1])*100)/100 + " C";
+                    document.getElementById("soc_fan").innerText = cmd[2] + " %";
+                    document.getElementById("led").innerText = cmd[3] + " %";
+                    document.getElementById("motor_temp").innerText = Math.round(parseFloat(cmd[4])*100)/100 + " C";
+                    document.getElementById("pwm_left").innerText = cmd[5];
+                    document.getElementById("pwm_right").innerText = cmd[6];
+                    var vbat = Math.round(parseFloat(cmd[7]) * 100) / 100;
+                    var vcel = Math.round(vbat * 100 / 4) / 100;
+                    var vlev = s_from_vbat(vcel);
+                    var vslop = Math.round(parseFloat(cmd[8]) * 10 * 3.6 ) / 10;
+                    if (vlev === undefined) {
+                        vlev = 0;
+                    }
+                    vlev = Math.round(100 * (1 - (vlev / vbat_3v)));
+
+                    document.getElementById("vbat").innerText = vbat + " v";
+                    document.getElementById("vcell").innerText = vcel + " v";
+                    document.getElementById("vslope").innerText = vslop + " v/h";
+                    document.getElementById("vpercent").innerText = vlev + " %";
+
+                    document.getElementById("scale").innerText = Math.round(pwm_scale * 100) / 100;
+                    var latency_now = latency_end - latency_start;
+                    latency = Math.round((latency_now*0.5 + latency*0.5 * 100))/100;
+                    document.getElementById("latency").innerText = latency + " ms";
+                    document.getElementById("slave_accept").innerText = cmd[9] + "/" + cmd[10];
+                    document.getElementById("wifi_quality").innerText = cmd[11] + "/70";
+                    document.getElementById("wifi_signal").innerText = cmd[12].trim() + " dBm";
+                }
+            };
+        }
+
+        document.getElementById("led_m10").addEventListener("click",
+            function () {
+                led_pwm -= 10;
+                if (0 >= led_pwm) led_pwm = 0;
+                ws.send("led " + led_pwm);
+            }, false);
+        document.getElementById("led_m5").addEventListener("click",
+            function () {
+                led_pwm -= 1;
+                if (0 >= led_pwm) led_pwm = 0;
+                ws.send("led " + led_pwm);
+            }, false);
+        document.getElementById("led_p5").addEventListener("click",
+            function () {
+                led_pwm += 1;
+                if (led_pwm >= 100) led_pwm = 100;
+                ws.send("led " + led_pwm);
+            }, false);
+        document.getElementById("led_p10").addEventListener("click",
+            function () {
+                led_pwm += 10;
+                if (led_pwm >= 100) led_pwm = 100;
+                ws.send("led " + led_pwm);
+            }, false);
+        document.getElementById("pwm_scale_m10").addEventListener("click",
+            function () {
+                pwm_scale += (-0.10);
+                if (0 >= pwm_scale) pwm_scale = 0;
+            }, false);
+        document.getElementById("pwm_scale_m5").addEventListener("click",
+            function () {
+                pwm_scale += (-0.05);
+                if (0 >= pwm_scale) pwm_scale = 0;
+            }, false);
+        document.getElementById("pwm_scale_p5").addEventListener("click",
+            function () {
+                pwm_scale += (+0.05);
+                if (pwm_scale >= 1.0) pwm_scale = 1.0;
+            }, false);
+        document.getElementById("pwm_scale_p10").addEventListener("click",
+            function () {
+                pwm_scale += (+0.10);
+                if (pwm_scale >= 1.0) pwm_scale = 1.0;
+            }, false);
+
+        var vbatg_ind = document.getElementById("vbatg_ind");
+        vbat_srcs = ["vbat_24h.png","vbat_1h.png","vbat_5m.png"];
+        vbat_src_idx = 2;
+        vbat_src = vbat_srcs[vbat_src_idx];
+        vbatg_ind.innerText = vbat_srcs[vbat_src_idx]; 
+
+        document.getElementById("vbatg_n").addEventListener("click",
+            function () {
+                if (vbat_src_idx==0)
+                {
+                    vbat_src_idx=2;
+                }
+                else
+                {
+                    vbat_src_idx--;
+                }
+
+                vbatg_ind.innerText = vbat_srcs[vbat_src_idx]; 
+            }, false);
+        document.getElementById("vbatg_p").addEventListener("click",
+            function (){
+                if (vbat_src_idx==2)
+                {
+                    vbat_src_idx=0;
+                }
+                else
+                {
+                    vbat_src_idx++;
+                }
+
+                vbatg_ind.innerText = vbat_srcs[vbat_src_idx]; 
+            }, false);
+        // document.getElementById("limit_pwm_txt").innerText = "pwm_scale (" + pwm_scale + ")";
+
+        var joy = new JoyStick('js', {},
+            function (stickData) {
+                var y = Math.round(stickData.y);
+                var x = Math.round(stickData.x);
+                var cm45 = 0.7071;
+                var sm45 = -0.7071;
+                js_left = Math.round((x * cm45 - y * sm45))/cm45;
+                js_right = Math.round((x * sm45 + y * cm45))/cm45;
+
+                if (Math.abs(js_left) > 100)
+                    js_left = 100*Math.sign(js_left);
+                if (Math.abs(js_right) > 100)
+                    js_right = 100*Math.sign(js_right);
+
+                js_left = Math.round(js_left * pwm_scale);
+                js_right = Math.round(js_right  * pwm_scale);
+            });
+
+        odd_even = 0;
+        window.setInterval(
+            function (event) {
+                latency_start = performance.now();
+                ws.send("stats");
+            }, 250);
+
+        zero_count = 0;
+        window.setInterval(
+            function (event) {
+                var update = false;
+                if ((js_left != 0 && js_right != 0)) {
+                    zero_count = 0;
+                    update = true;
+                }
+                else if (zero_count == 0) {
+                    update = true;
+                    zero_count++;
+                }
+
+                if (update) {
+                    ws.send("js " + js_left + " " + js_right);
+                    odd_even = (odd_even + 1) % 2;
+                    document.getElementById("log").innerText = "js" + odd_even + " " + js_left + " " + js_right;
+                }
+            }, 100);
+
+        var vbat_graph = document.getElementById("vbat_graph");
+        window.setInterval(
+            function () {
+                vbat_graph.src = vbat_srcs[vbat_src_idx] + "?" + new Date().getTime() + "#svgView(viewBox(30,10,350,150))";
+            }
+            , 1000);
+
+        connect();
+    </script>
+
+    <script>
+        document.getElementById("imgcam").src = "http://" + location.hostname + "/stream";
+    </script>
+
+    <!-- <script>
+        var jmuxer;
+        window.onload = function() {
+            var socketURL = "ws://" + location.hostname + ":9003";
+            jmuxer = new JMuxer({
+                node: 'player',
+                mode: 'video',
+                flushingTime: 1,
+                fps: 10,
+                debug: true,
+                onError: function(data) {
+                    if (/Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor)) {
+                        jmuxer.reset();
+                    }
+                }
+            });
+        
+            var ws = new WebSocket(socketURL);
+            ws.binaryType = 'arraybuffer';
+            ws.addEventListener('message',function(event) {
+                // console.log("on_message", event.data);
+                jmuxer.feed({
+                    video: new Uint8Array(event.data)
+                });
+            });
+        
+            ws.addEventListener('error', function(e) {
+                console.log('Socket Error');
+            });
+        }
+    </script> -->
+</body>
+
+</html>

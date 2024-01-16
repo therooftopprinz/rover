@@ -1,0 +1,69 @@
+#!/usr/bin/bash
+
+cd $(dirname $0)
+echo working at $(pwd)
+
+user=$(cat server.cfg|head -n 2|tail -1)
+pass=$(cat server.cfg|head -n 4|tail -1)
+name=$(cat server.cfg|head -n 6|tail -1)
+reso=$(cat server.cfg|head -n 8|tail -1)
+imgd=$(cat server.cfg|head -n 10|tail -1)
+gmma=$(cat server.cfg|head -n 12|tail -1)
+brts=$(cat server.cfg|head -n 14|tail -1)
+crts=$(cat server.cfg|head -n 16|tail -1)
+frps=$(cat server.cfg|head -n 18|tail -1)
+qlty=$(cat server.cfg|head -n 20|tail -1)
+
+opt=""
+
+if [ "$user" != "" ]; then
+    opt=" $opt --user $user"
+    opt=" $opt --pass $pass"
+fi
+
+dev=$(v4l2-ctl --list-devices | grep -zoP "$name.*\n.*" | tail -1 | sed -e 's/\t//')
+
+if [ -z $dev ]; then
+   echo "USB camera $name not found!"
+   opt="$opt -d /"
+else
+   echo "Using camera $name ($dev)" 
+   opt=" $opt -d $dev"
+fi
+
+if [ "$reso" != "" ]; then
+    opt=" $opt -r $reso"
+fi
+
+if [ "$imgd" != "" ]; then
+    opt=" $opt $imgd"
+fi
+
+if [ "$gmma" != "" ]; then
+    opt=" $opt --gamma $gmma"
+fi
+
+if [ "$brts" != "" ]; then
+    opt=" $opt --brightness $brts"
+fi
+
+if [ "$crts" != "" ]; then
+    opt=" $opt --contrast $crts"
+fi
+
+if [ "$crts" != "" ]; then
+    opt=" $opt --contrast $crts"
+fi
+
+if [ "$frps" != "" ]; then
+    opt=" $opt -f $frps"
+fi
+
+if [ "$qlty" != "" ]; then
+    opt=" $opt -q $qlty"
+fi
+
+
+echo "options: $opt"
+
+./ustreamer -s0 -p80 --static . --tcp-nodelay --blank blank.jpg $opt
